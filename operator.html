@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Operator - Sistem Antrean Rumah Sakit</title>
+    <link rel="stylesheet" href="css/operator.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="navbar-left">
+            <h1>Panel Operator</h1>
+            <span class="subtitle">Loket Pelayanan</span>
+        </div>
+        <div class="navbar-right">
+            <span id="operator-name" class="operator-name"></span>
+            <button id="logout-btn" class="btn btn-secondary">Logout</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="card current-ticket-card" aria-live="polite">
+            <div class="card-header">
+                <h2>Tiket Sedang Ditangani</h2>
+            </div>
+            <div class="card-body">
+                <div id="current-ticket-display" class="ticket-display empty">
+                    <div class="ticket-placeholder">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                        </svg>
+                        <p class="placeholder-text">Belum ada tiket dipanggil</p>
+                        <p class="placeholder-hint">Klik "Panggil Selanjutnya" untuk memulai</p>
+                    </div>
+                </div>
+                <div id="current-ticket-content" class="ticket-content hidden">
+                    <div class="ticket-main">
+                        <div class="ticket-number" id="current-ticket-number">-</div>
+                        <div class="ticket-meta">
+                            <span class="ticket-service" id="current-ticket-service">-</span>
+                            <span class="ticket-priority" id="current-ticket-priority">Normal</span>
+                        </div>
+                    </div>
+                    <div class="ticket-time" id="current-ticket-time">Dipanggil pada: -</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card action-card">
+            <div class="card-header">
+                <h2>Aksi Utama</h2>
+            </div>
+            <div class="card-body">
+                <div class="action-buttons">
+                    <button id="call-next-btn" class="btn btn-primary btn-lg" disabled>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 11l-4 4m4-4H7m4-4v4"/>
+                        </svg>
+                        <span>Panggil Selanjutnya</span>
+                    </button>
+                    <button id="finish-btn" class="btn btn-success btn-lg" disabled>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+                            <path d="M20 6L9 17l-5-5"/>
+                        </svg>
+                        <span>Selesai</span>
+                    </button>
+                    <button id="skip-btn" class="btn btn-warning btn-lg" disabled>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+                            <path d="M10 17l5-5-5-5M15 12H3"/>
+                        </svg>
+                        <span>Lewati</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="card manual-ticket-card">
+            <div class="card-header">
+                <h2>Penerbitan Tiket Manual</h2>
+            </div>
+            <div class="card-body">
+                <form id="manual-ticket-form" class="form-grid">
+                    <div class="form-group">
+                        <label for="manual-queue-select">Jenis Antrean</label>
+                        <select id="manual-queue-select" required>
+                            <option value="">-- Pilih Jenis Antrean --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="manual-priority-select">Tingkat Prioritas</label>
+                        <select id="manual-priority-select" required>
+                            <option value="Normal">Normal</option>
+                            <option value="VIP">VIP</option>
+                            <option value="Disabilitas">Disabilitas</option>
+                            <option value="Lansia">Lansia</option>
+                        </select>
+                    </div>
+                    <div class="form-group form-group-full">
+                        <button type="submit" class="btn btn-primary">Terbitkan Tiket</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section class="card waiting-summary-card">
+            <div class="card-header">
+                <h2>Ringkasan Antrean Menunggu</h2>
+            </div>
+            <div class="card-body">
+                <div id="waiting-summary" class="waiting-summary">
+                    <div class="loading-state">Memuat data...</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="toast" class="toast hidden" role="alert" aria-live="polite"></div>
+
+    <script type="module" src="./dist/operator.js"></script>
+</body>
+</html>
