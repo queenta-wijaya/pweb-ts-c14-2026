@@ -3,8 +3,8 @@
 ## Anggota Kelompok
 | Nama | NRP | Bagian Tugas | Halaman |
 | :--- | :---: | :---: | :--- |
-| Chilmi Muhammad Ulin Nuha | 5027251003 | Orang 1 (No. 1) | `login.html` |
-| Ni Putu Maqueenta Wijaya | 5027251004 | Orang 2 (No. 2 & 3) | `index.html`, `operator.html` |
+| Chilmi Muhammad Ulin Nuha | 5027251003 | Orang 2 (No. 2 & 3) | `index.html`, `operator.html` |
+| Ni Putu Maqueenta Wijaya | 5027251004 | Orang 1 (No. 1) | `login.html` |
 | Naila Anggun Eka Rizqy | 5027251122 | Orang 3 (No. 4 & 5) | `layar.html`, `ambil-antrian.html` |
 
 ---
