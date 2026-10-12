@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ambil Nomor Antrian | Antrian Rumah Sakit</title>
+    <link rel="stylesheet" href="css/ambil-antrian.css">
+    <script src="dist/storage.js" defer></script>
+    <script src="dist/ambil-antrian.js" defer></script>
+</head>
+<body>
+    <div class="kiosk-wrapper">
+        <!-- Header & Navigasi -->
+        <header class="kiosk-header">
+            <div class="header-title-group">
+                <h1 class="header-title">Ambil nomor antrian</h1>
+                <p class="header-subtitle">Pilih jenis layanan untuk mengambil nomor antrian.</p>
+            </div>
+            <nav class="header-nav">
+                <a href="layar.html" class="nav-tab">Layar Antrian</a>
+                <a href="ambil-antrian.html" class="nav-tab active">Ambil Nomor</a>
+                <button type="button" id="fullscreen-btn" class="nav-tab nav-btn">Layar Penuh</button>
+            </nav>
+        </header>
+
+        <!-- Pesan Alert/Notifikasi Ringan jika ada perubahan -->
+        <div id="status-banner" class="status-banner" hidden></div>
+
+        <!-- Grid Kartu Jenis Antrean -->
+        <main class="kiosk-content">
+            <div id="queue-grid" class="queue-grid">
+                <!-- Diisi secara dinamis oleh ambil-antrian.ts -->
+            </div>
+
+            <div id="empty-state" class="empty-state" hidden>
+                <div class="empty-icon">🏥</div>
+                <h2>Tidak Ada Layanan Aktif</h2>
+                <p>Saat ini belum ada layanan antrean yang dibuka oleh petugas. Silakan hubungi bagian informasi.</p>
+            </div>
+        </main>
+
+        <!-- Footer Info Pembaruan Otomatis -->
+        <footer class="kiosk-footer">
+            <p>
+                <span class="pulse-dot"></span>
+                Jenis antrian baru muncul otomatis. Data: <span id="last-update-time">Memuat...</span>
+            </p>
+        </footer>
+    </div>
+
+    <!-- Modal Dialog Struk Tiket -->
+    <div id="ticket-modal" class="modal-overlay" hidden>
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-hospital-badge">
+                    <span class="plus-sign">+</span> RUMAH SAKIT SEHAT SEJAHTERA
+                </div>
+                <button type="button" id="modal-close-x" class="modal-close-btn" aria-label="Tutup">&times;</button>
+            </div>
+
+            <div class="ticket-receipt" id="ticket-receipt-content">
+                <div class="receipt-title">TIKET ANTRIAN</div>
+                <div class="receipt-service" id="ticket-service-name">-</div>
+                
+                <div class="receipt-number-box">
+                    <span class="receipt-number" id="ticket-number-display">A-000</span>
+                    <span class="receipt-priority-badge" id="ticket-priority-display">NORMAL</span>
+                </div>
+
+                <div class="receipt-meta">
+                    <div class="meta-row">
+                        <span>Waktu Pengambilan:</span>
+                        <strong id="ticket-time-display">-</strong>
+                    </div>
+                    <div class="meta-row">
+                        <span>Antrean Menunggu:</span>
+                        <strong id="ticket-waiting-display">0 pasien</strong>
+                    </div>
+                </div>
+
+                <p class="receipt-note">
+                    Harap simpan struk ini dan dengarkan panggilan di Layar Monitor Ruang Tunggu.
+                </p>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" id="modal-print-btn" class="btn-secondary">Cetak Struk</button>
+                <button type="button" id="modal-ok-btn" class="btn-primary">Selesai</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,468 @@
+/* Reset & Typography */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: #f8fafc;
+    color: #0f172a;
+    line-height: 1.5;
+    min-height: 100vh;
+}
+
+.display-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px 24px 36px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header */
+.display-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 24px;
+}
+
+.header-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: -0.5px;
+}
+
+.header-subtitle {
+    font-size: 14px;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+/* Nav Tabs */
+.header-nav {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.nav-tab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 18px;
+    border-radius: 9999px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #334155;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.nav-tab:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+}
+
+.nav-tab.active {
+    background: #0f172a;
+    color: #ffffff;
+    border-color: #0f172a;
+}
+
+.nav-btn {
+    font-family: inherit;
+}
+
+.sound-btn {
+    border-color: #93c5fd;
+    color: #1d4ed8;
+    background: #eff6ff;
+}
+
+.sound-btn:hover {
+    background: #dbeafe;
+}
+
+.sound-btn.muted {
+    border-color: #cbd5e1;
+    color: #64748b;
+    background: #f8fafc;
+}
+
+/* Banner Panggilan Baru */
+.latest-call-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fef3c7;
+    border: 1px solid #fde68a;
+    padding: 12px 18px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    animation: flashHighlight 1.5s ease-in-out;
+}
+
+.latest-call-banner[hidden] {
+    display: none;
+}
+
+.banner-badge {
+    background: #d97706;
+    color: white;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.banner-text {
+    font-size: 15px;
+    font-weight: 700;
+    color: #92400e;
+}
+
+/* Grid Layout */
+.display-content {
+    flex: 1;
+}
+
+.display-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+/* Monitor Card */
+.display-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 250px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.display-card.is-active-calling {
+    border-color: #fbbf24;
+    box-shadow: 0 10px 20px -5px rgba(245, 158, 11, 0.15), 0 4px 6px -2px rgba(245, 158, 11, 0.05);
+}
+
+.display-card.newly-called {
+    animation: cardPulse 1.2s ease;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.service-name {
+    font-size: 18px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.2px;
+}
+
+.service-code {
+    background: #f1f5f9;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+}
+
+/* Center Call Status Area */
+.card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 24px 20px;
+    text-align: center;
+}
+
+.call-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 800;
+    color: #d97706;
+    margin-bottom: 10px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+}
+
+.call-dot {
+    width: 8px;
+    height: 8px;
+    background: #f59e0b;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+    animation: callPulse 1.8s infinite;
+}
+
+.called-number {
+    font-size: 56px;
+    font-weight: 900;
+    line-height: 1;
+    color: #0f172a;
+    font-family: monospace, sans-serif;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.priority-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.priority-tag.VIP {
+    background: #f3e8ff;
+    color: #7e22ce;
+    border: 1px solid #e9d5ff;
+}
+
+.priority-tag.Disabilitas {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+}
+
+.priority-tag.Lansia {
+    background: #ecfdf5;
+    color: #047857;
+    border: 1px solid #a7f3d0;
+}
+
+.priority-tag.Normal {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+/* Idle State in Card */
+.idle-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 6px;
+}
+
+.idle-subtext {
+    font-size: 13px;
+    color: #94a3b8;
+    max-width: 220px;
+    line-height: 1.4;
+}
+
+/* Card Footer */
+.card-footer {
+    padding: 12px 20px;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    background: #ffffff;
+    border: 1px dashed #cbd5e1;
+    border-radius: 16px;
+    margin: 40px 0;
+}
+
+.empty-icon {
+    font-size: 54px;
+    margin-bottom: 16px;
+}
+
+.empty-state h2 {
+    font-size: 22px;
+    color: #0f172a;
+    margin-bottom: 8px;
+}
+
+.empty-state p {
+    color: #64748b;
+    max-width: 500px;
+    margin: 0 auto;
+    font-size: 14px;
+}
+
+/* Monitor Footer */
+.display-footer {
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: #94a3b8;
+}
+
+.footer-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.live-dot {
+    width: 8px;
+    height: 8px;
+    background: #ef4444;
+    border-radius: 50%;
+    animation: callPulse 1.5s infinite;
+}
+
+/* Animations */
+@keyframes callPulse {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+    }
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 8px rgba(245, 158, 11, 0);
+    }
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+    }
+}
+
+@keyframes cardPulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.8);
+    }
+    50% {
+        transform: scale(1.03);
+        box-shadow: 0 0 0 12px rgba(245, 158, 11, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.05);
+    }
+}
+
+@keyframes flashHighlight {
+    0% { opacity: 0; transform: translateY(-10px); }
+    50% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 1; }
+}
+
+/* Fullscreen Mode Optimization */
+:fullscreen body,
+:-webkit-full-screen body {
+    background-color: #0f172a;
+    color: #f8fafc;
+}
+
+:fullscreen .display-wrapper,
+:-webkit-full-screen .display-wrapper {
+    max-width: 100%;
+    padding: 32px 48px;
+}
+
+:fullscreen .header-title,
+:-webkit-full-screen .header-title {
+    color: #ffffff;
+    font-size: 32px;
+}
+
+:fullscreen .header-subtitle,
+:-webkit-full-screen .header-subtitle {
+    color: #94a3b8;
+    font-size: 16px;
+}
+
+:fullscreen .display-card,
+:-webkit-full-screen .display-card {
+    background: #1e293b;
+    border-color: #334155;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+}
+
+:fullscreen .service-name,
+:-webkit-full-screen .service-name {
+    color: #ffffff;
+}
+
+:fullscreen .service-code,
+:-webkit-full-screen .service-code {
+    background: #334155;
+    color: #94a3b8;
+    border-color: #475569;
+}
+
+:fullscreen .called-number,
+:-webkit-full-screen .called-number {
+    color: #f8fafc;
+    font-size: 68px;
+}
+
+:fullscreen .idle-text,
+:-webkit-full-screen .idle-text {
+    color: #cbd5e1;
+}
+
+:fullscreen .card-footer,
+:-webkit-full-screen .card-footer {
+    background: #0f172a;
+    border-color: #334155;
+    color: #94a3b8;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .display-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .header-nav {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .display-grid {
+        grid-template-columns: 1fr;
+    }
+}
