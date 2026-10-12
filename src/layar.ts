@@ -1,5 +1,13 @@
 // Logika Layar Antrian Publik (Monitor Display)
 
+import {
+    getActiveQueueTypes,
+    getCalledTicket,
+    getWaitingTicketsCount,
+    QueueType,
+    QueueTicket
+} from "./storage.js";
+
 (function () {
     // Referensi Elemen DOM
     const displayGrid = document.getElementById("display-grid") as HTMLDivElement;
@@ -96,9 +104,7 @@
 
     // Render Tampilan Monitor Antrean
     function renderDisplayMonitor(): void {
-        if (!window.QueueStorage) return;
-
-        const activeTypes = window.QueueStorage.getActiveQueueTypes();
+        const activeTypes = getActiveQueueTypes();
 
         if (lastUpdateTimeEl) {
             lastUpdateTimeEl.textContent = getFormattedCurrentTime();
@@ -120,8 +126,8 @@
         displayGrid.innerHTML = "";
 
         for (const type of activeTypes) {
-            const calledTicket = window.QueueStorage.getCalledTicket(type.code);
-            const waitingCount = window.QueueStorage.getWaitingTicketsCount(type.code);
+            const calledTicket = getCalledTicket(type.code);
+            const waitingCount = getWaitingTicketsCount(type.code);
 
             const card = document.createElement("div");
             card.className = "display-card";

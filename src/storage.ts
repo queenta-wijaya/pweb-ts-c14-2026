@@ -1,16 +1,16 @@
 // Master Type Definitions & Storage Management
 
-type PriorityLevel = "VIP" | "Disabilitas" | "Lansia" | "Normal";
-type TicketStatus = "Menunggu" | "Dipanggil" | "Selesai" | "Dilewati";
+export type PriorityLevel = "VIP" | "Disabilitas" | "Lansia" | "Normal";
+export type TicketStatus = "Menunggu" | "Dipanggil" | "Selesai" | "Dilewati";
 
-interface QueueType {
+export interface QueueType {
     code: string;       // Satu huruf kapital (misal: "A", "B", "G")
     name: string;       // Nama layanan (misal: "UMUM-1", "GIGI", "FARMASI")
     isActive: boolean;  // Status aktif atau nonaktif
     counter: number;    // Nomor urut terakhir yang diterbitkan untuk jenis antrean ini
 }
 
-interface QueueTicket {
+export interface QueueTicket {
     id: string;               // ID unik tiket
     queueTypeCode: string;    // Kode jenis antrean, misal "A"
     ticketNumber: string;     // Nomor lengkap, misal "A-001"
@@ -20,7 +20,7 @@ interface QueueTicket {
     calledAt?: string;        // Waktu dipanggil (ISO String)
 }
 
-interface QueueStorageAPI {
+export interface QueueStorageAPI {
     STORAGE_KEYS: {
         TYPES: string;
         TICKETS: string;
@@ -37,12 +37,14 @@ interface QueueStorageAPI {
     resetAllQueues(): void;
 }
 
-interface Window {
-    QueueStorage: QueueStorageAPI;
+declare global {
+    interface Window {
+        QueueStorage: QueueStorageAPI;
+    }
 }
 
 // Default Seed Data jenis antrean sesuai modul praktikum
-const DEFAULT_QUEUE_TYPES: QueueType[] = [
+export const DEFAULT_QUEUE_TYPES: QueueType[] = [
     { code: "A", name: "UMUM-1", isActive: true, counter: 0 },
     { code: "B", name: "UMUM-2", isActive: true, counter: 0 },
     { code: "C", name: "UMUM-3", isActive: true, counter: 0 },
@@ -54,8 +56,7 @@ const DEFAULT_QUEUE_TYPES: QueueType[] = [
 const QUEUE_TYPES_KEY = "hospital_queue_types";
 const QUEUE_TICKETS_KEY = "hospital_queue_tickets";
 
-// Mengambil master jenis antrean (dengan fallback ke default jika kosong)
-function getQueueTypes(): QueueType[] {
+export function getQueueTypes(): QueueType[] {
     try {
         const raw = localStorage.getItem(QUEUE_TYPES_KEY) || localStorage.getItem("queue_types");
         if (!raw) {
@@ -73,22 +74,22 @@ function getQueueTypes(): QueueType[] {
     return DEFAULT_QUEUE_TYPES;
 }
 
-function saveQueueTypes(types: QueueType[]): void {
+export function saveQueueTypes(types: QueueType[]): void {
     localStorage.setItem(QUEUE_TYPES_KEY, JSON.stringify(types));
     // Simpan juga ke key alias untuk kompatibilitas jika Orang 2 menggunakan key berbeda
     localStorage.setItem("queue_types", JSON.stringify(types));
 }
 
-function getActiveQueueTypes(): QueueType[] {
+export function getActiveQueueTypes(): QueueType[] {
     return getQueueTypes().filter((item) => item.isActive);
 }
 
-function getQueueTypeByCode(code: string): QueueType | undefined {
+export function getQueueTypeByCode(code: string): QueueType | undefined {
     const upper = code.toUpperCase();
     return getQueueTypes().find((item) => item.code.toUpperCase() === upper);
 }
 
-function getTickets(): QueueTicket[] {
+export function getTickets(): QueueTicket[] {
     try {
         const raw = localStorage.getItem(QUEUE_TICKETS_KEY) || localStorage.getItem("queue_tickets");
         if (!raw) return [];
@@ -102,13 +103,13 @@ function getTickets(): QueueTicket[] {
     return [];
 }
 
-function saveTickets(tickets: QueueTicket[]): void {
+export function saveTickets(tickets: QueueTicket[]): void {
     localStorage.setItem(QUEUE_TICKETS_KEY, JSON.stringify(tickets));
     localStorage.setItem("queue_tickets", JSON.stringify(tickets));
 }
 
 // Fungsi pembuatan tiket baru dengan format KODE-001 (tiga digit)
-function createTicket(
+export function createTicket(
     queueTypeCode: string,
     priority: PriorityLevel = "Normal"
 ): QueueTicket | null {
@@ -147,7 +148,7 @@ function createTicket(
 }
 
 // Mengambil tiket yang sedang berstatus "Dipanggil" untuk suatu jenis antrean
-function getCalledTicket(queueTypeCode: string): QueueTicket | undefined {
+export function getCalledTicket(queueTypeCode: string): QueueTicket | undefined {
     const upper = queueTypeCode.toUpperCase();
     const tickets = getTickets();
     // Cari tiket yang berstatus "Dipanggil" untuk jenis ini (ambil yang paling baru jika ada)
@@ -159,7 +160,7 @@ function getCalledTicket(queueTypeCode: string): QueueTicket | undefined {
 }
 
 // Menghitung jumlah tiket yang masih dalam antrean (status "Menunggu")
-function getWaitingTicketsCount(queueTypeCode: string): number {
+export function getWaitingTicketsCount(queueTypeCode: string): number {
     const upper = queueTypeCode.toUpperCase();
     const tickets = getTickets();
     return tickets.filter(
@@ -168,7 +169,7 @@ function getWaitingTicketsCount(queueTypeCode: string): number {
 }
 
 // Reset semua nomor tiket dan antrean
-function resetAllQueues(): void {
+export function resetAllQueues(): void {
     const types = getQueueTypes();
     const resetTypes = types.map((t) => ({ ...t, counter: 0 }));
     saveQueueTypes(resetTypes);

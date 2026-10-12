@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Sistem Antrean Rumah Sakit</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-left">
+                <h1>Dashboard Admin</h1>
+                <p class="subtitle">Sistem Antrean Rumah Sakit</p>
+            </div>
+            <div class="header-right">
+                <span id="admin-greeting" class="greeting"></span>
+                <button id="logout-btn" class="btn btn-secondary">Logout</button>
+            </div>
+        </header>
+
+        <section class="card">
+            <div class="card-header">
+                <h2>Jenis Antrean</h2>
+            </div>
+            <form id="queue-type-form" class="form-inline">
+                <input type="text" id="code-input" placeholder="Kode (1 huruf, cth: A)" maxlength="1" required>
+                <input type="text" id="name-input" placeholder="Nama (cth: Poli Umum)" required>
+                <button type="submit" class="btn btn-primary">Tambah</button>
+            </form>
+            <div class="table-wrapper">
+                <table id="queue-types-table">
+                    <thead>
+                        <tr>
+                            <th>Kode</th>
+                            <th>Nama</th>
+                            <th>Status</th>
+                            <th>Counter</th>
+                            <th>Menunggu</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-header">
+                <h2>Penerbitan Tiket Manual</h2>
+            </div>
+            <form id="manual-ticket-form" class="form-inline">
+                <select id="manual-queue-select" required>
+                    <option value="">-- Pilih Jenis Antrean --</option>
+                </select>
+                <select id="manual-priority-select" required>
+                    <option value="Normal">Normal</option>
+                    <option value="VIP">VIP</option>
+                    <option value="Disabilitas">Disabilitas</option>
+                    <option value="Lansia">Lansia</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Terbitkan Tiket</button>
+            </form>
+        </section>
+
+        <section class="card">
+            <div class="card-header">
+                <h2>Aksi Cepat</h2>
+            </div>
+            <div class="action-buttons">
+                <button id="reset-queues-btn" class="btn btn-danger">Reset Semua Antrean</button>
+            </div>
+            <p class="reset-note">Menghapus semua tiket hari ini dan mengembalikan penomoran ke 0</p>
+        </section>
+
+        <div id="toast" class="toast hidden"></div>
+    </div>
+
+    <div id="edit-modal" class="modal hidden" role="dialog" aria-labelledby="edit-modal-title" aria-modal="true">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="edit-modal-title">Edit Jenis Antrean</h3>
+                <button type="button" class="modal-close" aria-label="Tutup modal">&times;</button>
+            </div>
+            <form id="edit-form">
+                <input type="hidden" id="edit-code">
+                <div class="form-group">
+                    <label for="edit-name">Nama Poli</label>
+                    <input type="text" id="edit-name" required>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="edit-active">
+                        <span>Aktif</span>
+                    </label>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary modal-cancel">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="./dist/index.js"></script>
+</body>
+</html>

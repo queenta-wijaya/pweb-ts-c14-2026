@@ -1,7 +1,6 @@
-"use strict";
 // Master Type Definitions & Storage Management
 // Default Seed Data jenis antrean sesuai modul praktikum
-const DEFAULT_QUEUE_TYPES = [
+export const DEFAULT_QUEUE_TYPES = [
     { code: "A", name: "UMUM-1", isActive: true, counter: 0 },
     { code: "B", name: "UMUM-2", isActive: true, counter: 0 },
     { code: "C", name: "UMUM-3", isActive: true, counter: 0 },
@@ -11,8 +10,7 @@ const DEFAULT_QUEUE_TYPES = [
 ];
 const QUEUE_TYPES_KEY = "hospital_queue_types";
 const QUEUE_TICKETS_KEY = "hospital_queue_tickets";
-// Mengambil master jenis antrean (dengan fallback ke default jika kosong)
-function getQueueTypes() {
+export function getQueueTypes() {
     try {
         const raw = localStorage.getItem(QUEUE_TYPES_KEY) || localStorage.getItem("queue_types");
         if (!raw) {
@@ -30,19 +28,19 @@ function getQueueTypes() {
     saveQueueTypes(DEFAULT_QUEUE_TYPES);
     return DEFAULT_QUEUE_TYPES;
 }
-function saveQueueTypes(types) {
+export function saveQueueTypes(types) {
     localStorage.setItem(QUEUE_TYPES_KEY, JSON.stringify(types));
     // Simpan juga ke key alias untuk kompatibilitas jika Orang 2 menggunakan key berbeda
     localStorage.setItem("queue_types", JSON.stringify(types));
 }
-function getActiveQueueTypes() {
+export function getActiveQueueTypes() {
     return getQueueTypes().filter((item) => item.isActive);
 }
-function getQueueTypeByCode(code) {
+export function getQueueTypeByCode(code) {
     const upper = code.toUpperCase();
     return getQueueTypes().find((item) => item.code.toUpperCase() === upper);
 }
-function getTickets() {
+export function getTickets() {
     try {
         const raw = localStorage.getItem(QUEUE_TICKETS_KEY) || localStorage.getItem("queue_tickets");
         if (!raw)
@@ -57,12 +55,12 @@ function getTickets() {
     }
     return [];
 }
-function saveTickets(tickets) {
+export function saveTickets(tickets) {
     localStorage.setItem(QUEUE_TICKETS_KEY, JSON.stringify(tickets));
     localStorage.setItem("queue_tickets", JSON.stringify(tickets));
 }
 // Fungsi pembuatan tiket baru dengan format KODE-001 (tiga digit)
-function createTicket(queueTypeCode, priority = "Normal") {
+export function createTicket(queueTypeCode, priority = "Normal") {
     const types = getQueueTypes();
     const typeIndex = types.findIndex((t) => t.code.toUpperCase() === queueTypeCode.toUpperCase());
     if (typeIndex === -1 || !types[typeIndex].isActive) {
@@ -89,7 +87,7 @@ function createTicket(queueTypeCode, priority = "Normal") {
     return newTicket;
 }
 // Mengambil tiket yang sedang berstatus "Dipanggil" untuk suatu jenis antrean
-function getCalledTicket(queueTypeCode) {
+export function getCalledTicket(queueTypeCode) {
     const upper = queueTypeCode.toUpperCase();
     const tickets = getTickets();
     // Cari tiket yang berstatus "Dipanggil" untuk jenis ini (ambil yang paling baru jika ada)
@@ -99,13 +97,13 @@ function getCalledTicket(queueTypeCode) {
     return calledList[calledList.length - 1];
 }
 // Menghitung jumlah tiket yang masih dalam antrean (status "Menunggu")
-function getWaitingTicketsCount(queueTypeCode) {
+export function getWaitingTicketsCount(queueTypeCode) {
     const upper = queueTypeCode.toUpperCase();
     const tickets = getTickets();
     return tickets.filter((t) => t.queueTypeCode.toUpperCase() === upper && t.status === "Menunggu").length;
 }
 // Reset semua nomor tiket dan antrean
-function resetAllQueues() {
+export function resetAllQueues() {
     const types = getQueueTypes();
     const resetTypes = types.map((t) => ({ ...t, counter: 0 }));
     saveQueueTypes(resetTypes);
