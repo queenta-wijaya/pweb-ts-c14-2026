@@ -192,3 +192,4 @@ window.QueueStorage = {
     getWaitingTicketsCount,
     resetAllQueues
 };
+
