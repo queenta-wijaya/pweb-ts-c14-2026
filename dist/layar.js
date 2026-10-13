@@ -6,78 +6,12 @@ import { getActiveQueueTypes, getCalledTicket, getWaitingTicketsCount } from "./
     const emptyState = document.getElementById("empty-state");
     const lastUpdateTimeEl = document.getElementById("last-update-time");
     const fullscreenBtn = document.getElementById("fullscreen-btn");
-    const soundToggleBtn = document.getElementById("sound-toggle-btn");
-    const soundIcon = document.getElementById("sound-icon");
-    const soundLabel = document.getElementById("sound-label");
     const latestCallBanner = document.getElementById("latest-call-banner");
     const latestCallText = document.getElementById("latest-call-text");
     // State Pelacakan Panggilan untuk Audio & Animasi
     // Menyimpan { [kodeLayanan]: nomorTiketTerakhirYangDipanggil }
     const lastCalledTicketMap = new Map();
     let isInitialLoad = true;
-    let isSoundEnabled = true;
-    // Helper Web Audio API untuk efek suara Chime Bell (Tanpa butuh file audio eksternal)
-    function playChimeSound() {
-        if (!isSoundEnabled)
-            return;
-        try {
-            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-            if (!AudioContextClass)
-                return;
-            const ctx = new AudioContextClass();
-            if (ctx.state === "suspended") {
-                ctx.resume();
-            }
-            const playTone = (freq, startTime, duration) => {
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = "sine";
-                osc.frequency.setValueAtTime(freq, startTime);
-                gain.gain.setValueAtTime(0.3, startTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start(startTime);
-                osc.stop(startTime + duration);
-            };
-            const now = ctx.currentTime;
-            // Nada ting-tung (Chime panggilan rumah sakit / bandara)
-            playTone(659.25, now, 0.4); // E5
-            playTone(880.00, now + 0.25, 0.6); // A5
-        }
-        catch (err) {
-            console.warn("Web Audio chime tidak dapat diputar:", err);
-        }
-    }
-    // Helper Web Speech API untuk Panggilan Suara Bahasa Indonesia (Bonus Fitur)
-    function announceTicket(ticketNumber, serviceName) {
-        if (!isSoundEnabled || !("speechSynthesis" in window))
-            return;
-        try {
-            window.speechSynthesis.cancel(); // Batalkan antrean ucapan sebelumnya jika ada
-            // Format pembacaan nomor agar jelas (misal A-001 dibaca A satu atau A kosong kosong satu)
-            const parts = ticketNumber.split("-");
-            let spokenNumber = ticketNumber;
-            if (parts.length === 2) {
-                const codeLetter = parts[0];
-                const digits = parts[1].split("").map((d) => {
-                    if (d === "0")
-                        return "kosong";
-                    return d;
-                }).join(" ");
-                spokenNumber = `${codeLetter}, ${digits}`;
-            }
-            const text = `Nomor antrean, ${spokenNumber}, silakan menuju loket ${serviceName}.`;
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = "id-ID";
-            utterance.rate = 0.9; // Kecepatan nyaman
-            utterance.pitch = 1.0;
-            window.speechSynthesis.speak(utterance);
-        }
-        catch (e) {
-            console.warn("Speech synthesis error:", e);
-        }
-    }
     // Format Jam: HH.mm.ss (sesuai dokumen soal)
     function getFormattedCurrentTime() {
         const now = new Date();
@@ -124,7 +58,7 @@ import { getActiveQueueTypes, getCalledTicket, getWaitingTicketsCount } from "./
                 }
                 card.innerHTML = `
                     <div class="card-header">
-                        <span class="service-name">${type.name}</span>
+                        <span class="service-name"></span>
                         <span class="service-code">${type.code}</span>
                     </div>
                     <div class="card-body">
@@ -144,7 +78,7 @@ import { getActiveQueueTypes, getCalledTicket, getWaitingTicketsCount } from "./
             else {
                 card.innerHTML = `
                     <div class="card-header">
-                        <span class="service-name">${type.name}</span>
+                        <span class="service-name"></span>
                         <span class="service-code">${type.code}</span>
                     </div>
                     <div class="card-body">
@@ -156,42 +90,18 @@ import { getActiveQueueTypes, getCalledTicket, getWaitingTicketsCount } from "./
                     </div>
                 `;
             }
+            card.querySelector(".service-name").textContent = type.name;
             displayGrid.appendChild(card);
         }
-        // Trigger Audio & Suara jika ada tiket baru yang dipanggil
+        // Tampilkan notifikasi visual jika ada tiket baru yang dipanggil.
         if (newlyCalledTicket) {
             const { ticket, type } = newlyCalledTicket;
             if (latestCallBanner && latestCallText) {
                 latestCallText.textContent = `Nomor ${ticket.ticketNumber} (${ticket.priority}) menuju ${type.name}`;
                 latestCallBanner.hidden = false;
             }
-            playChimeSound();
-            setTimeout(() => {
-                announceTicket(ticket.ticketNumber, type.name);
-            }, 600);
         }
         isInitialLoad = false;
-    }
-    // Toggle Suara Panggilan
-    if (soundToggleBtn) {
-        soundToggleBtn.addEventListener("click", () => {
-            isSoundEnabled = !isSoundEnabled;
-            if (isSoundEnabled) {
-                soundIcon.textContent = "🔊";
-                soundLabel.textContent = "Suara Aktif";
-                soundToggleBtn.classList.remove("muted");
-                // Test sound chime singkat untuk konfirmasi aktivasi
-                playChimeSound();
-            }
-            else {
-                soundIcon.textContent = "🔇";
-                soundLabel.textContent = "Bisu";
-                soundToggleBtn.classList.add("muted");
-                if ("speechSynthesis" in window) {
-                    window.speechSynthesis.cancel();
-                }
-            }
-        });
     }
     // Toggle Fullscreen API
     function updateFullscreenBtnText() {

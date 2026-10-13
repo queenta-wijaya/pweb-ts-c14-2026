@@ -1,8 +1,9 @@
-import { getQueueTypes, saveQueueTypes, getQueueTypeByCode, getWaitingTicketsCount, createTicket, resetAllQueues } from "./storage.js";
+import { getQueueTypes, saveQueueTypes, getQueueTypeByCode, getWaitingTicketsCount, getTickets, saveTickets, createTicket, resetAllQueues } from "./storage.js";
 const allowedRoles = ["admin", "moderator"];
 const currentRole = localStorage.getItem("role");
-if (!currentRole || !allowedRoles.includes(currentRole)) {
-    window.location.href = "login.html";
+const token = localStorage.getItem("token");
+if (!token || !currentRole || !allowedRoles.includes(currentRole.toLowerCase())) {
+    window.location.replace("login.html");
 }
 const formEl = document.getElementById("queue-type-form");
 const codeInput = document.getElementById("code-input");
@@ -30,14 +31,17 @@ function showToast(message, type = "info") {
 }
 function showGreeting() {
     const firstName = localStorage.getItem("firstName");
-    if (firstName) {
-        greetingEl.textContent = `Halo, ${firstName}`;
+    const role = localStorage.getItem("role");
+    if (firstName && role) {
+        const displayRole = role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
+        greetingEl.textContent = `${firstName} | ${displayRole}`;
     }
 }
 function handleLogout() {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     localStorage.removeItem("firstName");
+    localStorage.removeItem("username");
     window.location.href = "login.html";
 }
 function renderQueueTypes() {
@@ -48,7 +52,7 @@ function renderQueueTypes() {
         const row = document.createElement("tr");
         row.innerHTML = `
             <td><code>${type.code}</code></td>
-            <td>${type.name}</td>
+            <td></td>
             <td>
                 <span class="status-badge ${type.isActive ? "active" : "inactive"}">
                     ${type.isActive ? "Aktif" : "Nonaktif"}
@@ -71,6 +75,7 @@ function renderQueueTypes() {
                 </button>
             </td>
         `;
+        row.children[1].textContent = type.name;
         tableBody.appendChild(row);
     });
     updateManualQueueSelect(types);
@@ -118,6 +123,10 @@ formEl.addEventListener("submit", (e) => {
         return;
     }
     const types = getQueueTypes();
+    if (types.some(type => type.name.trim().toLowerCase() === name.toLowerCase())) {
+        showToast(`Nama layanan "${name}" sudah digunakan`, "error");
+        return;
+    }
     types.push({ code, name, isActive: true, counter: 0 });
     saveQueueTypes(types);
     codeInput.value = "";
@@ -148,9 +157,12 @@ tableBody.addEventListener("click", (e) => {
     }
     else if (action === "delete") {
         const typeName = types[typeIndex].name;
-        if (confirm(`Hapus jenis antrean "${typeName}" (${code})?`)) {
+        if (confirm(`Hapus jenis antrean "${typeName}" (${code}) beserta seluruh tiketnya?`)) {
             types.splice(typeIndex, 1);
             saveQueueTypes(types);
+            const remainingTickets = getTickets()
+                .filter(ticket => ticket.queueTypeCode.toUpperCase() !== code.toUpperCase());
+            saveTickets(remainingTickets);
             renderQueueTypes();
             showToast(`Jenis antrean "${typeName}" dihapus`, "success");
         }
@@ -169,6 +181,10 @@ editForm.addEventListener("submit", (e) => {
     const typeIndex = types.findIndex((t) => t.code === code);
     if (typeIndex === -1)
         return;
+    if (types.some((type, index) => index !== typeIndex && type.name.trim().toLowerCase() === name.toLowerCase())) {
+        showToast(`Nama layanan "${name}" sudah digunakan`, "error");
+        return;
+    }
     types[typeIndex].name = name;
     types[typeIndex].isActive = isActive;
     saveQueueTypes(types);
@@ -206,5 +222,10 @@ resetBtn.addEventListener("click", () => {
     }
 });
 logoutBtn.addEventListener("click", handleLogout);
+window.addEventListener("storage", (event) => {
+    if (!event.key || event.key.includes("queue")) {
+        renderQueueTypes();
+    }
+});
 showGreeting();
 renderQueueTypes();

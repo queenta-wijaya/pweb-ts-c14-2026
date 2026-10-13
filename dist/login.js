@@ -6,35 +6,25 @@ const loading = document.getElementById("loading");
 const errorMessage = document.getElementById("error-message");
 const loginButton = document.getElementById("login-button");
 async function getUserRole(user) {
-    // Gunakan role jika memang disediakan oleh respons login.
     if (user.role) {
         return user.role.toLowerCase();
     }
-    // Cari pengguna pada daftar referensi role dari soal.
     const endpoints = [
         "https://dummyjson.com/users/filter?key=role&value=admin",
+        "https://dummyjson.com/users/filter?key=role&value=moderator",
         "https://dummyjson.com/users/filter?key=role&value=user"
     ];
-    try {
-        const responses = await Promise.all(endpoints.map(url => fetch(url)));
-        if (responses.some(response => !response.ok)) {
-            return "user";
-        }
-        const results = await Promise.all(responses.map(response => response.json()));
-        const admin = results[0].users.find(item => item.id === user.id);
-        if (admin) {
-            return (admin.role || "admin").toLowerCase();
-        }
-        const regularUser = results[1].users.find(item => item.id === user.id);
-        if (regularUser) {
-            return (regularUser.role || "user").toLowerCase();
-        }
+    const responses = await Promise.all(endpoints.map(url => fetch(url)));
+    if (responses.some(response => !response.ok)) {
+        throw new Error("Gagal memverifikasi role pengguna. Silakan coba lagi.");
     }
-    catch (error) {
-        console.error("Gagal mengambil referensi role:", error);
+    const results = await Promise.all(responses.map(response => response.json()));
+    const matchedUser = results.flatMap(result => result.users)
+        .find(item => item.id === user.id);
+    if (!matchedUser?.role) {
+        throw new Error("Role pengguna tidak dapat diverifikasi.");
     }
-    // Jika role tidak dapat diverifikasi, jangan beri akses admin.
-    return "user";
+    return matchedUser.role.toLowerCase();
 }
 form.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -61,23 +51,14 @@ form.addEventListener("submit", async (event) => {
             throw new Error("Respons login tidak memiliki data sesi yang diperlukan.");
         }
         const role = await getUserRole(data);
-        // Simpan sesi setelah login berhasil.
         localStorage.setItem("token", token);
         localStorage.setItem("role", role);
         localStorage.setItem("firstName", data.firstName);
-        localStorage.setItem("username", data.username); // Tambahan untuk memastikan username tersimpan
-        // Moderator mendapatkan akses yang sama dengan admin.
         if (role === "admin" || role === "moderator") {
             window.location.href = "index.html";
         }
         else {
-            // Penanganan khusus untuk memisahkan Operator dan Pasien
-            if (data.username === "alexanderj") {
-                window.location.href = "operator.html";
-            }
-            else {
-                window.location.href = "ambil-antrian.html";
-            }
+            window.location.href = "ambil-antrian.html";
         }
     }
     catch (error) {

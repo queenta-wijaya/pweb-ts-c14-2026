@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Layar Antrian | Antrian Rumah Sakit</title>
     <link rel="stylesheet" href="css/layar.css">
+    <link rel="stylesheet" href="css/common.css">
     <script src="dist/storage.js" defer></script>
     <script type="module" src="./dist/layar.js"></script>
 </head>
@@ -19,15 +20,15 @@
             <nav class="header-nav">
                 <a href="layar.html" class="nav-tab active">Layar Antrian</a>
                 <a href="ambil-antrian.html" class="nav-tab">Ambil Nomor</a>
+                <a id="role-home-link" href="index.html" class="nav-tab" hidden></a>
                 <button type="button" id="fullscreen-btn" class="nav-tab nav-btn">Layar Penuh</button>
-                <button type="button" id="sound-toggle-btn" class="nav-tab nav-btn sound-btn" title="Aktifkan/Nonaktifkan Suara Panggilan">
-                    <span id="sound-icon">🔊</span> <span id="sound-label">Suara Aktif</span>
-                </button>
+                <span id="session-user" class="nav-tab session-user" hidden></span>
+                <button type="button" id="public-logout-btn" class="nav-tab nav-btn" hidden>Logout</button>
             </nav>
         </header>
 
         <!-- Banner Panggilan Aktif Terbaru (Running Text / Callout Alert) -->
-        <div id="latest-call-banner" class="latest-call-banner" hidden>
+        <div id="latest-call-banner" class="latest-call-banner" role="status" aria-live="polite" hidden>
             <div class="banner-badge">PANGGILAN TERBARU</div>
             <div class="banner-text" id="latest-call-text">Memanggil nomor...</div>
         </div>
@@ -56,6 +57,7 @@
             </div>
         </footer>
     </div>
+    <script src="dist/auth.js" defer></script>
+    <script src="dist/public-nav.js" defer></script>
 </body>
 </html>
-

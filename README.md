@@ -72,7 +72,11 @@
 
 ---
 
-## Fitur Tugas Orang 3 (Nomor 4 & 5)
+## Fitur Alur Antrean
+- **Panel Operator (`operator.html`):**
+  - Hanya admin/moderator yang dapat membuka panel; pengguna biasa diarahkan kembali ke halaman publik Ambil Antrian.
+  - Pemanggilan tiket berurutan menurut prioritas, serta aksi *Lewati* dan *Selesai*.
+  - Saat tiket berikutnya dipanggil, tiket aktif sebelumnya otomatis ditandai selesai.
 - **Halaman Ambil Antrian (`ambil-antrian.html`):**
   - Tampilan self-service publik untuk pengunjung tanpa perlu login.
   - Kartu jenis antrean aktif otomatis muncul.
@@ -85,4 +89,4 @@
   - Indikator kartu: badge status, nomor besar yang dipanggil, serta jumlah antrean yang sedang menunggu.
   - *Polling* otomatis setiap 2 detik tanpa reload halaman.
   - Tombol toggle Layar Penuh (*Fullscreen API*).
-  - **Bonus Fitur:** Suara panggilan (*Audio Chime* & *Text-to-Speech*) bahasa Indonesia native via Web Audio API dan Web Speech API ketika ada antrean baru yang dipanggil.
+  - Notifikasi visual ketika operator memanggil nomor baru.

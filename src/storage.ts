@@ -64,7 +64,7 @@ export function getQueueTypes(): QueueType[] {
             return DEFAULT_QUEUE_TYPES;
         }
         const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed) && parsed.length > 0) {
+        if (Array.isArray(parsed)) {
             return parsed;
         }
     } catch (e) {
@@ -193,4 +193,3 @@ window.QueueStorage = {
     getWaitingTicketsCount,
     resetAllQueues
 };
-

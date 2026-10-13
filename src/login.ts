@@ -44,53 +44,35 @@ const loginButton = document.getElementById(
 async function getUserRole(
     user: LoginResponse
 ): Promise<string> {
-    // Gunakan role jika memang disediakan oleh respons login.
     if (user.role) {
         return user.role.toLowerCase();
     }
 
-    // Cari pengguna pada daftar referensi role dari soal.
     const endpoints = [
         "https://dummyjson.com/users/filter?key=role&value=admin",
+        "https://dummyjson.com/users/filter?key=role&value=moderator",
         "https://dummyjson.com/users/filter?key=role&value=user"
     ];
 
-    try {
-        const responses = await Promise.all(
-            endpoints.map(url => fetch(url))
-        );
+    const responses = await Promise.all(
+        endpoints.map(url => fetch(url))
+    );
 
-        if (responses.some(response => !response.ok)) {
-            return "user";
-        }
-
-        const results = await Promise.all(
-            responses.map(response =>
-                response.json() as Promise<UsersResponse>
-            )
-        );
-
-        const admin = results[0].users.find(
-            item => item.id === user.id
-        );
-
-        if (admin) {
-            return (admin.role || "admin").toLowerCase();
-        }
-
-        const regularUser = results[1].users.find(
-            item => item.id === user.id
-        );
-
-        if (regularUser) {
-            return (regularUser.role || "user").toLowerCase();
-        }
-    } catch (error) {
-        console.error("Gagal mengambil referensi role:", error);
+    if (responses.some(response => !response.ok)) {
+        throw new Error("Gagal memverifikasi role pengguna. Silakan coba lagi.");
     }
 
-    // Jika role tidak dapat diverifikasi, jangan beri akses admin.
-    return "user";
+    const results = await Promise.all(
+        responses.map(response => response.json() as Promise<UsersResponse>)
+    );
+    const matchedUser = results.flatMap(result => result.users)
+        .find(item => item.id === user.id);
+
+    if (!matchedUser?.role) {
+        throw new Error("Role pengguna tidak dapat diverifikasi.");
+    }
+
+    return matchedUser.role.toLowerCase();
 }
 
 form.addEventListener("submit", async (event: SubmitEvent) => {
@@ -134,22 +116,14 @@ form.addEventListener("submit", async (event: SubmitEvent) => {
 
         const role = await getUserRole(data);
 
-        // Simpan sesi setelah login berhasil.
         localStorage.setItem("token", token);
         localStorage.setItem("role", role);
         localStorage.setItem("firstName", data.firstName);
-        localStorage.setItem("username", data.username); // Tambahan untuk memastikan username tersimpan
 
-        // Moderator mendapatkan akses yang sama dengan admin.
         if (role === "admin" || role === "moderator") {
             window.location.href = "index.html";
         } else {
-            // Penanganan khusus untuk memisahkan Operator dan Pasien
-            if (data.username === "alexanderj") {
-                window.location.href = "operator.html";
-            } else {
-                window.location.href = "ambil-antrian.html";
-            }
+            window.location.href = "ambil-antrian.html";
         }
 
     } catch (error) {

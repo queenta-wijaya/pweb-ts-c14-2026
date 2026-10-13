@@ -71,6 +71,17 @@ body {
     cursor: pointer;
 }
 
+.nav-tab[hidden] {
+    display: none;
+}
+
+.session-user {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1d4ed8;
+    cursor: default;
+}
+
 .nav-tab:hover {
     background: #f1f5f9;
     border-color: #94a3b8;
@@ -391,65 +402,15 @@ body {
 }
 
 /* Fullscreen Mode Optimization */
-:fullscreen body,
-:-webkit-full-screen body {
-    background-color: #0f172a;
-    color: #f8fafc;
-}
-
 :fullscreen .display-wrapper,
 :-webkit-full-screen .display-wrapper {
     max-width: 100%;
     padding: 32px 48px;
 }
 
-:fullscreen .header-title,
-:-webkit-full-screen .header-title {
-    color: #ffffff;
-    font-size: 32px;
-}
-
-:fullscreen .header-subtitle,
-:-webkit-full-screen .header-subtitle {
-    color: #94a3b8;
-    font-size: 16px;
-}
-
-:fullscreen .display-card,
-:-webkit-full-screen .display-card {
-    background: #1e293b;
-    border-color: #334155;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
-}
-
-:fullscreen .service-name,
-:-webkit-full-screen .service-name {
-    color: #ffffff;
-}
-
-:fullscreen .service-code,
-:-webkit-full-screen .service-code {
-    background: #334155;
-    color: #94a3b8;
-    border-color: #475569;
-}
-
 :fullscreen .called-number,
 :-webkit-full-screen .called-number {
-    color: #f8fafc;
     font-size: 68px;
-}
-
-:fullscreen .idle-text,
-:-webkit-full-screen .idle-text {
-    color: #cbd5e1;
-}
-
-:fullscreen .card-footer,
-:-webkit-full-screen .card-footer {
-    background: #0f172a;
-    border-color: #334155;
-    color: #94a3b8;
 }
 
 /* Responsive */
@@ -466,4 +427,3 @@ body {
         grid-template-columns: 1fr;
     }
 }
-

@@ -1,5 +1,5 @@
 // Logika Halaman Ambil Antrian (Kiosk Publik)
-import { getActiveQueueTypes, getQueueTypeByCode, getWaitingTicketsCount, createTicket } from "./storage.js";
+import { getActiveQueueTypes, getQueueTypeByCode, getTickets, createTicket } from "./storage.js";
 // Referensi Elemen DOM
 const queueGrid = document.getElementById("queue-grid");
 const emptyState = document.getElementById("empty-state");
@@ -36,6 +36,15 @@ function formatTicketDateTime(isoString) {
         second: "2-digit"
     });
 }
+function getPriorityOrder(priority) {
+    const order = {
+        "VIP": 0,
+        "Disabilitas": 1,
+        "Lansia": 2,
+        "Normal": 3
+    };
+    return order[priority];
+}
 // Fungsi Render Kartu Layanan Aktif
 function renderQueueCards(force = false) {
     const activeTypes = getActiveQueueTypes();
@@ -66,7 +75,7 @@ function renderQueueCards(force = false) {
         card.setAttribute("data-code", type.code);
         card.innerHTML = `
             <div class="card-header">
-                <span class="service-name">${type.name}</span>
+                <span class="service-name"></span>
                 <span class="service-code">${type.code}</span>
             </div>
             <div class="card-actions">
@@ -89,6 +98,7 @@ function renderQueueCards(force = false) {
                 </div>
             </div>
         `;
+        card.querySelector(".service-name").textContent = type.name;
         queueGrid.appendChild(card);
     });
 }
@@ -114,7 +124,12 @@ function handleTakeTicket(code, priority) {
         return;
     }
     // Hitung berapa pasien yang sudah menunggu sebelum tiket ini dibuat
-    const waitingBefore = getWaitingTicketsCount(code);
+    const tickets = getTickets();
+    const waitingBefore = tickets.filter(ticket => ticket.queueTypeCode === code &&
+        ticket.status === "Menunggu" &&
+        (getPriorityOrder(ticket.priority) < getPriorityOrder(priority) ||
+            (getPriorityOrder(ticket.priority) === getPriorityOrder(priority) &&
+                new Date(ticket.createdAt).getTime() <= Date.now()))).length;
     // Terbitkan tiket baru melalui storage helper
     const ticket = createTicket(code, priority);
     if (ticket) {

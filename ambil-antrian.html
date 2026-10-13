@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ambil Nomor Antrian | Antrian Rumah Sakit</title>
     <link rel="stylesheet" href="css/ambil-antrian.css">
+    <link rel="stylesheet" href="css/common.css">
     <script type="module" src="./dist/ambil-antrian.js"></script>
 </head>
 <body>
@@ -18,12 +19,17 @@
             <nav class="header-nav">
                 <a href="layar.html" class="nav-tab">Layar Antrian</a>
                 <a href="ambil-antrian.html" class="nav-tab active">Ambil Nomor</a>
+                <a id="role-home-link" href="index.html" class="nav-tab" hidden></a>
                 <button type="button" id="fullscreen-btn" class="nav-tab nav-btn">Layar Penuh</button>
+                <span id="session-user" class="nav-tab session-user" hidden></span>
+                <button type="button" id="public-logout-btn" class="nav-tab nav-btn" hidden>Logout</button>
             </nav>
         </header>
 
         <!-- Pesan Alert/Notifikasi Ringan jika ada perubahan -->
-        <div id="status-banner" class="status-banner" hidden></div>
+        <div id="status-banner" class="status-banner" hidden>        </div>
+        <script src="dist/auth.js" defer></script>
+        <script src="dist/public-nav.js" defer></script>
 
         <!-- Grid Kartu Jenis Antrean -->
         <main class="kiosk-content">
@@ -90,4 +96,3 @@
     </div>
 </body>
 </html>
-

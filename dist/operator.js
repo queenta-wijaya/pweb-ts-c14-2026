@@ -1,9 +1,12 @@
 import { getActiveQueueTypes, getQueueTypeByCode, getTickets, saveTickets } from "./storage.js";
-const allowedRoles = ["admin", "moderator", "operator", "user"];
 const currentRole = localStorage.getItem("role");
 const token = localStorage.getItem("token");
-if (!token || !currentRole || !allowedRoles.includes(currentRole)) {
-    window.location.href = "login.html";
+if (!token) {
+    window.location.replace("login.html");
+}
+else if (!currentRole ||
+    !["admin", "moderator"].includes(currentRole.toLowerCase())) {
+    window.location.replace("ambil-antrian.html");
 }
 const operatorNameEl = document.getElementById("operator-name");
 const logoutBtn = document.getElementById("logout-btn");
@@ -17,14 +20,17 @@ function showToast(message, type = "info") {
 }
 function showOperatorName() {
     const firstName = localStorage.getItem("firstName");
-    if (firstName) {
-        operatorNameEl.textContent = firstName;
+    const role = localStorage.getItem("role");
+    if (firstName && role) {
+        const displayRole = role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
+        operatorNameEl.textContent = `${firstName} | ${displayRole}`;
     }
 }
 function logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     localStorage.removeItem("firstName");
+    localStorage.removeItem("username");
     window.location.href = "login.html";
 }
 function getPriorityOrder(priority) {
@@ -63,7 +69,8 @@ function renderOperatorGrid() {
     operatorGrid.innerHTML = activeTypes.map(type => {
         const poliTickets = tickets.filter(t => t.queueTypeCode === type.code);
         const waitingTickets = poliTickets.filter(t => t.status === "Menunggu");
-        const calledTicket = poliTickets.find(t => t.status === "Dipanggil");
+        const calledTickets = poliTickets.filter(t => t.status === "Dipanggil");
+        const calledTicket = calledTickets[calledTickets.length - 1];
         waitingTickets.sort((a, b) => {
             const priorityDiff = getPriorityOrder(a.priority) - getPriorityOrder(b.priority);
             if (priorityDiff !== 0)
@@ -75,7 +82,7 @@ function renderOperatorGrid() {
         return `
             <section class="card poli-card" data-poli-code="${type.code}">
                 <div class="poli-card-header">
-                    <h3>${type.name} (${type.code})</h3>
+                    <h3></h3>
                     <span class="waiting-badge">${waitingCount} menunggu</span>
                 </div>
                 <div class="poli-card-body">
@@ -103,6 +110,9 @@ function renderOperatorGrid() {
                             </svg>
                             <span>Panggil Berikutnya</span>
                         </button>
+                        <button class="btn btn-warning skip-btn" ${!calledTicket ? "disabled" : ""} data-poli-code="${type.code}">
+                            <span>Lewati</span>
+                        </button>
                         <button class="btn btn-success finish-btn" ${!calledTicket ? "disabled" : ""} data-poli-code="${type.code}">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
                                 <path d="M20 6L9 17l-5-5"/>
@@ -114,6 +124,12 @@ function renderOperatorGrid() {
             </section>
         `;
     }).join("");
+    activeTypes.forEach(type => {
+        const card = operatorGrid.querySelector(`[data-poli-code="${type.code}"]`);
+        const title = card?.querySelector("h3");
+        if (title)
+            title.textContent = `${type.name} (${type.code})`;
+    });
     attachEventListeners();
 }
 function attachEventListeners() {
@@ -122,6 +138,9 @@ function attachEventListeners() {
     });
     document.querySelectorAll(".finish-btn").forEach(btn => {
         btn.addEventListener("click", handleFinish);
+    });
+    document.querySelectorAll(".skip-btn").forEach(btn => {
+        btn.addEventListener("click", handleSkip);
     });
 }
 function handleCallNext(e) {
@@ -147,11 +166,37 @@ function handleCallNext(e) {
         showToast("Tiket tidak ditemukan", "error");
         return;
     }
+    tickets.forEach(ticket => {
+        if (ticket.queueTypeCode === poliCode && ticket.status === "Dipanggil") {
+            ticket.status = "Selesai";
+        }
+    });
     tickets[ticketIndex].status = "Dipanggil";
     tickets[ticketIndex].calledAt = new Date().toISOString();
     saveTickets(tickets);
     const type = getQueueTypeByCode(poliCode);
     showToast(`Memanggil ${nextTicket.ticketNumber} (${getPriorityLabel(nextTicket.priority)}) - ${type?.name}`, "success");
+    renderOperatorGrid();
+}
+function handleSkip(e) {
+    const btn = e.currentTarget;
+    const poliCode = btn.dataset.poliCode;
+    if (!poliCode)
+        return;
+    const tickets = getTickets();
+    const calledTickets = tickets.filter(ticket => ticket.queueTypeCode === poliCode && ticket.status === "Dipanggil");
+    const calledTicket = calledTickets[calledTickets.length - 1];
+    if (!calledTicket) {
+        showToast("Tidak ada tiket yang sedang dipanggil", "info");
+        return;
+    }
+    tickets.forEach(ticket => {
+        if (ticket.queueTypeCode === poliCode && ticket.status === "Dipanggil") {
+            ticket.status = ticket.id === calledTicket.id ? "Dilewati" : "Selesai";
+        }
+    });
+    saveTickets(tickets);
+    showToast(`Tiket ${calledTicket.ticketNumber} dilewati`, "warning");
     renderOperatorGrid();
 }
 function handleFinish(e) {
@@ -160,16 +205,18 @@ function handleFinish(e) {
     if (!poliCode)
         return;
     const tickets = getTickets();
-    const calledTicket = tickets.find(t => t.queueTypeCode === poliCode && t.status === "Dipanggil");
+    const calledTickets = tickets.filter(t => t.queueTypeCode === poliCode && t.status === "Dipanggil");
+    const calledTicket = calledTickets[calledTickets.length - 1];
     if (!calledTicket) {
         showToast("Tidak ada tiket yang sedang dipanggil", "info");
         return;
     }
-    const ticketIndex = tickets.findIndex(t => t.id === calledTicket.id);
-    if (ticketIndex !== -1) {
-        tickets[ticketIndex].status = "Selesai";
-        saveTickets(tickets);
-    }
+    tickets.forEach(ticket => {
+        if (ticket.queueTypeCode === poliCode && ticket.status === "Dipanggil") {
+            ticket.status = "Selesai";
+        }
+    });
+    saveTickets(tickets);
     showToast(`Tiket ${calledTicket.ticketNumber} selesai`, "success");
     renderOperatorGrid();
 }

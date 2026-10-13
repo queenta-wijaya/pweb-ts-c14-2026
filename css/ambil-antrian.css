@@ -70,6 +70,17 @@ body {
     cursor: pointer;
 }
 
+.nav-tab[hidden] {
+    display: none;
+}
+
+.session-user {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1d4ed8;
+    cursor: default;
+}
+
 .nav-tab:hover {
     background: #f1f5f9;
     border-color: #94a3b8;
@@ -571,4 +582,3 @@ body {
         grid-template-columns: 1fr;
     }
 }
-

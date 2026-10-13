@@ -25,6 +25,7 @@ function logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     localStorage.removeItem("firstName");
+    localStorage.removeItem("username");
     window.location.replace("login.html");
 }
 window.QueueAuth = {
