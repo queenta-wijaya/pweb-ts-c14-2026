@@ -8,12 +8,12 @@
 </head>
 <body>
     <div class="container">
-        <header class="header">
-            <div class="header-left">
+        <header class="navbar">
+            <div class="navbar-left">
                 <h1>Dashboard Admin</h1>
                 <p class="subtitle">Sistem Antrean Rumah Sakit</p>
             </div>
-            <div class="header-right">
+            <div class="navbar-right">
                 <span id="admin-greeting" class="greeting"></span>
                 <button id="logout-btn" class="btn btn-secondary">Logout</button>
             </div>
@@ -23,25 +23,27 @@
             <div class="card-header">
                 <h2>Jenis Antrean</h2>
             </div>
-            <form id="queue-type-form" class="form-inline">
-                <input type="text" id="code-input" placeholder="Kode (1 huruf, cth: A)" maxlength="1" required>
-                <input type="text" id="name-input" placeholder="Nama (cth: Poli Umum)" required>
-                <button type="submit" class="btn btn-primary">Tambah</button>
-            </form>
-            <div class="table-wrapper">
-                <table id="queue-types-table">
-                    <thead>
-                        <tr>
-                            <th>Kode</th>
-                            <th>Nama</th>
-                            <th>Status</th>
-                            <th>Counter</th>
-                            <th>Menunggu</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+            <div class="card-body">
+                <form id="queue-type-form" class="form-inline">
+                    <input type="text" id="code-input" placeholder="Kode (1 huruf, cth: A)" maxlength="1" required>
+                    <input type="text" id="name-input" placeholder="Nama (cth: Poli Umum)" required>
+                    <button type="submit" class="btn btn-primary">Tambah</button>
+                </form>
+                <div class="table-wrapper">
+                    <table id="queue-types-table">
+                        <thead>
+                            <tr>
+                                <th>Kode</th>
+                                <th>Nama</th>
+                                <th>Status</th>
+                                <th>Counter</th>
+                                <th>Menunggu</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </section>
 
@@ -49,28 +51,32 @@
             <div class="card-header">
                 <h2>Penerbitan Tiket Manual</h2>
             </div>
-            <form id="manual-ticket-form" class="form-inline">
-                <select id="manual-queue-select" required>
-                    <option value="">-- Pilih Jenis Antrean --</option>
-                </select>
-                <select id="manual-priority-select" required>
-                    <option value="Normal">Normal</option>
-                    <option value="VIP">VIP</option>
-                    <option value="Disabilitas">Disabilitas</option>
-                    <option value="Lansia">Lansia</option>
-                </select>
-                <button type="submit" class="btn btn-primary">Terbitkan Tiket</button>
-            </form>
+            <div class="card-body">
+                <form id="manual-ticket-form" class="form-inline">
+                    <select id="manual-queue-select" required>
+                        <option value="">-- Pilih Jenis Antrean --</option>
+                    </select>
+                    <select id="manual-priority-select" required>
+                        <option value="Normal">Normal</option>
+                        <option value="VIP">VIP</option>
+                        <option value="Disabilitas">Disabilitas</option>
+                        <option value="Lansia">Lansia</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Terbitkan Tiket</button>
+                </form>
+            </div>
         </section>
 
         <section class="card">
             <div class="card-header">
                 <h2>Aksi Cepat</h2>
             </div>
-            <div class="action-buttons">
-                <button id="reset-queues-btn" class="btn btn-danger">Reset Semua Antrean</button>
+            <div class="card-body">
+                <div class="action-buttons">
+                    <button id="reset-queues-btn" class="btn btn-danger">Reset Semua Antrean</button>
+                </div>
+                <p class="reset-note">Menghapus semua tiket hari ini dan mengembalikan penomoran ke 0</p>
             </div>
-            <p class="reset-note">Menghapus semua tiket hari ini dan mengembalikan penomoran ke 0</p>
         </section>
 
         <div id="toast" class="toast hidden"></div>

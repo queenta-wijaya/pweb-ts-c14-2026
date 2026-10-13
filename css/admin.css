@@ -85,9 +85,9 @@ body {
     align-items: center;
     flex-wrap: wrap;
     gap: 16px;
-    padding-bottom: 20px;
+    padding: 20px 32px;
     border-bottom: 1px solid var(--border-light);
-    margin-bottom: 24px;
+    margin-bottom: 32px;
 }
 
 .navbar-left {
@@ -173,7 +173,7 @@ body {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 8px 18px;
+    padding: 12px 20px;
     border-radius: var(--radius-pill);
     font-size: 14px;
     font-weight: 600;
@@ -316,8 +316,9 @@ body {
     align-items: center;
     flex-wrap: wrap;
     gap: 12px;
-    padding: 16px 20px 12px;
+    padding: 16px 24px;
     border-bottom: 1px solid var(--border-light);
+    margin-bottom: 0;
 }
 
 .card-header h2 {
@@ -329,7 +330,7 @@ body {
 }
 
 .card-body {
-    padding: 24px 20px;
+    padding: 20px 24px;
 }
 
 .card-footer {
@@ -348,16 +349,16 @@ body {
 .form-inline {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 16px !important;
     align-items: flex-end;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }
 
 .form-inline select,
 .form-inline input[type="text"] {
     flex: 1;
-    min-width: 180px;
-    padding: 8px 14px;
+    min-width: 200px;
+    padding: 12px 20px;
     border: 1px solid var(--border-medium);
     border-radius: var(--radius-md);
     font-size: 14px;
@@ -377,7 +378,7 @@ body {
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
 }
 
 .form-group label {
@@ -388,7 +389,7 @@ body {
 
 .form-group select,
 .form-group input[type="text"] {
-    padding: 8px 14px;
+    padding: 12px 20px;
     border: 1px solid var(--border-medium);
     border-radius: var(--radius-md);
     font-size: 14px;
@@ -437,6 +438,7 @@ body {
 .table-wrapper {
     overflow-x: auto;
     padding: 0 4px 8px;
+    margin-top: 20px;
 }
 
 table {
