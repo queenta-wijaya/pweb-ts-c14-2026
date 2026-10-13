@@ -8,7 +8,7 @@ import {
     PriorityLevel
 } from "./storage.js";
 
-const allowedRoles = ["admin", "moderator", "operator"];
+const allowedRoles = ["admin", "moderator", "operator", "user"];
 const currentRole = localStorage.getItem("role");
 const token = localStorage.getItem("token");
 if (!token || !currentRole || !allowedRoles.includes(currentRole)) {

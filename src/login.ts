@@ -1,4 +1,3 @@
-
 interface LoginResponse {
     id: number;
     username: string;
@@ -139,12 +138,18 @@ form.addEventListener("submit", async (event: SubmitEvent) => {
         localStorage.setItem("token", token);
         localStorage.setItem("role", role);
         localStorage.setItem("firstName", data.firstName);
+        localStorage.setItem("username", data.username); // Tambahan untuk memastikan username tersimpan
 
         // Moderator mendapatkan akses yang sama dengan admin.
         if (role === "admin" || role === "moderator") {
             window.location.href = "index.html";
         } else {
-            window.location.href = "operator.html";
+            // Penanganan khusus untuk memisahkan Operator dan Pasien
+            if (data.username === "alexanderj") {
+                window.location.href = "operator.html";
+            } else {
+                window.location.href = "ambil-antrian.html";
+            }
         }
 
     } catch (error) {
